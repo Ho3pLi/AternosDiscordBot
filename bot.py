@@ -2,17 +2,7 @@ import os
 from dotenv import load_dotenv
 import discord
 from discord.ext import commands
-import responses
-from python_aternos import Client, ServerStartError, Status
-
-# message handler
-async def send_message(message, user_message, is_private):
-    try:
-        response = responses.get_response(user_message)
-        await message.author.send(response) if is_private else await message.channel.send(response)
-
-    except Exception as e:
-        print(e)
+from python_aternos import Client, ServerStartError
 
 #NOTE - Discord section
 def runDiscordBot():
