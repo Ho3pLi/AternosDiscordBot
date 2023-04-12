@@ -21,8 +21,11 @@ def runDiscordBot():
     async def setSA(ctx, myServerAddress):
         global serverAddress
         serverAddress = myServerAddress
-        print(serverAddress)
         await ctx.channel.send('Server address set correctly!')
+
+    @bot.command()
+    async def viewSA(ctx):
+        await ctx.channel.send('The current server address is: `'+serverAddress+'`')
 
     @bot.command()
     async def helpASC(ctx):
