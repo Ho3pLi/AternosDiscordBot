@@ -64,7 +64,7 @@ def runDiscordBot():
 #NOTE - Aternos section
 
 def serverStatus() -> str:
-    aternos = Client.from_hashed('Ho3pLi', '2f37ce8d68dea0676ba16ea100ba87e2')
+    aternos = Client.from_hashed('Manicotta', '5ff4e13215988a4839ca9b91e36fe8d0')
 
     servers = aternos.list_servers()
 
@@ -77,7 +77,7 @@ def serverStatus() -> str:
     return myServer.status
 
 def runServer():
-    aternos = Client.from_hashed('Ho3pLi', '2f37ce8d68dea0676ba16ea100ba87e2')
+    aternos = Client.from_hashed('Manicotta', '5ff4e13215988a4839ca9b91e36fe8d0')
 
     servers = aternos.list_servers()
 
@@ -94,7 +94,7 @@ def runServer():
         print(err.message)
 
 def stopServer():
-    aternos = Client.from_hashed('Ho3pLi', '2f37ce8d68dea0676ba16ea100ba87e2')
+    aternos = Client.from_hashed('Manicotta', '5ff4e13215988a4839ca9b91e36fe8d0')
 
     servers = aternos.list_servers()
 
