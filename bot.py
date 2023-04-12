@@ -29,7 +29,7 @@ def runDiscordBot():
 
     @bot.command()
     async def helpASC(ctx):
-        await ctx.channel.send('`List of helpful commands coming soon :)`')
+        await ctx.channel.send('List of helpful commands :)\n\n```/viewSA: check current Server Address\n\n/setSA: set your Server Address\n\n/statusASC: check your server current status\n\n/startASC: start your server\n\n/stopASC: shut down your server```')
 
     @bot.command()
     async def startASC(ctx):
