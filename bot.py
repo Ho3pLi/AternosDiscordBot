@@ -4,6 +4,8 @@ import discord
 from discord.ext import commands
 from python_aternos import Client, ServerStartError
 
+serverAddress = 'none'
+
 #NOTE - Discord section
 def runDiscordBot():
 
@@ -16,15 +18,22 @@ def runDiscordBot():
     bot = commands.Bot(command_prefix= '/' , intents=intents)
 
     @bot.command()
+    async def setSA(ctx, myServerAddress):
+        global serverAddress
+        serverAddress = myServerAddress
+        print(serverAddress)
+        await ctx.channel.send('Server address set correctly!')
+
+    @bot.command()
     async def helpASC(ctx):
         await ctx.channel.send('`List of helpful commands coming soon :)`')
 
     @bot.command()
-    async def startASC(ctx, serverAddress):
-        status = serverStatus(serverAddress)
+    async def startASC(ctx):
+        status = serverStatus()
         print(status)
         if status == 'offline':
-            runServer(serverAddress)
+            runServer()
             await ctx.channel.send('Server status: '+status+'\n\nServer starting..')
         elif status == 'loading' or status == 'preparing':
             await ctx.channel.send('Server status: '+status+'\n\nServer starting..')
@@ -32,15 +41,15 @@ def runDiscordBot():
             await ctx.channel.send('Server status: '+status+'\n\nServer online')
 
     @bot.command()
-    async def statusASC(ctx, serverAddress):
-        status = serverStatus(serverAddress)
+    async def statusASC(ctx):
+        status = serverStatus()
         await ctx.channel.send('The server is: '+status)
 
     @bot.command()
-    async def stopASC(ctx, serverAddress):
-        status = serverStatus(serverAddress)
+    async def stopASC(ctx):
+        status = serverStatus()
         if status == 'online':
-            stopServer(serverAddress)
+            stopServer()
             await ctx.channel.send('Server status: '+status+'\n\nServer shutting down..')
         elif status == 'loading' or status == 'preparing':
             await ctx.channel.send('Server status: '+status+'\n\nServer starting, you can\'t stop it now.\nTry when the server is online!')
@@ -51,7 +60,7 @@ def runDiscordBot():
 
 #NOTE - Aternos section
 
-def serverStatus(serverAddress: str) -> str:
+def serverStatus() -> str:
     aternos = Client.from_hashed('Ho3pLi', '2f37ce8d68dea0676ba16ea100ba87e2')
 
     servers = aternos.list_servers()
@@ -64,7 +73,7 @@ def serverStatus(serverAddress: str) -> str:
     
     return myServer.status
 
-def runServer(serverAddress: str):
+def runServer():
     aternos = Client.from_hashed('Ho3pLi', '2f37ce8d68dea0676ba16ea100ba87e2')
 
     servers = aternos.list_servers()
@@ -81,7 +90,7 @@ def runServer(serverAddress: str):
         print(err.code)
         print(err.message)
 
-def stopServer(serverAddress: str):
+def stopServer():
     aternos = Client.from_hashed('Ho3pLi', '2f37ce8d68dea0676ba16ea100ba87e2')
 
     servers = aternos.list_servers()
