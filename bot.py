@@ -67,6 +67,12 @@ def runDiscordBot():
             await ctx.channel.send(str(rs))
         else:
             await ctx.channel.send('The server is offline!')
+    
+    @bot.command()
+    async def playerList(ctx):
+        rs = getPlayerList()
+        
+        await ctx.channel.send('\n'.join(rs))
 
     bot.run(TOKEN)
 
@@ -131,3 +137,16 @@ def getOnlinePlayers():
             myServer = server
         
     return ('Online: '+str(myServer.players_count)+' of '+str(myServer.slots))
+
+def getPlayerList():
+    aternos = Client.from_hashed('Ho3pLi', '2f37ce8d68dea0676ba16ea100ba87e2')
+
+    servers = aternos.list_servers()
+
+    myServer = None
+
+    for server in servers:
+        if server.address == serverAddress:
+            myServer = server
+        
+    return myServer.players_list
