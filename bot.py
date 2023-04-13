@@ -59,6 +59,15 @@ def runDiscordBot():
         elif status == 'offline':
             await ctx.channel.send('Server status: '+status+'\n\nServer offline')
 
+    @bot.command()
+    async def onlinePlayers(ctx):
+        status = serverStatus()
+        if status == 'online':
+            rs = getOnlinePlayers()
+            await ctx.channel.send(str(rs))
+        else:
+            await ctx.channel.send('The server is offline!')
+
     bot.run(TOKEN)
 
 #NOTE - Aternos section
@@ -109,3 +118,16 @@ def stopServer():
     except ServerStartError as err:
         print(err.code)
         print(err.message)
+
+def getOnlinePlayers():
+    aternos = Client.from_hashed('Ho3pLi', '2f37ce8d68dea0676ba16ea100ba87e2')
+
+    servers = aternos.list_servers()
+
+    myServer = None
+
+    for server in servers:
+        if server.address == serverAddress:
+            myServer = server
+        
+    return ('Online: '+str(myServer.players_count)+' of '+str(myServer.slots))
