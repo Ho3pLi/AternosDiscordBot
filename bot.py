@@ -21,11 +21,15 @@ def runDiscordBot():
     async def setSA(ctx, myServerAddress):
         global serverAddress
         serverAddress = myServerAddress
-        await ctx.channel.send('Server address set correctly!')
+        title = 'Server address set correctly!'
+        embed = createEmbed(title)
+        await ctx.channel.send(embed=embed)
 
     @bot.command()
     async def viewSA(ctx):
-        await ctx.channel.send('The current server address is: `'+serverAddress+'`')
+        title = 'The current server address is: '
+        embed = createEmbed(title, serverAddress)
+        await ctx.channel.send(embed=embed)
 
     @bot.command()
     async def helpASC(ctx):
@@ -34,45 +38,78 @@ def runDiscordBot():
     @bot.command()
     async def startASC(ctx):
         status = serverStatus()
-        print(status)
+        title = 'Server status: '
+        starting = 'Server starting..'
+        online = 'Server online'
         if status == 'offline':
             runServer()
-            await ctx.channel.send('Server status: '+status+'\n\nServer starting..')
+            embed = createEmbed(title, starting)
+            await ctx.channel.send(embed=embed)
         elif status == 'loading' or status == 'preparing':
-            await ctx.channel.send('Server status: '+status+'\n\nServer starting..')
+            embed = createEmbed(title, starting)
+            await ctx.channel.send(embed=embed)
         elif status == 'online':
-            await ctx.channel.send('Server status: '+status+'\n\nServer online')
+            embed = createEmbed(title, online)
+            await ctx.channel.send(embed=embed)
 
     @bot.command()
     async def statusASC(ctx):
         status = serverStatus()
-        await ctx.channel.send('The server is: '+status)
+        title = 'The server is:'
+        embed = createEmbed(title, status)
+        await ctx.channel.send(embed=embed)
 
     @bot.command()
     async def stopASC(ctx):
         status = serverStatus()
+        title = 'Server status: '+status
+        online = 'Server shutting down..'
+        loading = 'Server starting, you can\'t stop it now.\nTry when the server is online!'
+        offline = 'Server offline'
         if status == 'online':
             stopServer()
-            await ctx.channel.send('Server status: '+status+'\n\nServer shutting down..')
+            embed = createEmbed(title, online)
+            await ctx.channel.send(embed=embed)
         elif status == 'loading' or status == 'preparing':
-            await ctx.channel.send('Server status: '+status+'\n\nServer starting, you can\'t stop it now.\nTry when the server is online!')
+            embed = createEmbed(title, loading)
+            await ctx.channel.send(embed=embed)
         elif status == 'offline':
-            await ctx.channel.send('Server status: '+status+'\n\nServer offline')
+            embed = createEmbed(title, offline)
+            await ctx.channel.send(embed=embed)
 
     @bot.command()
     async def onlinePlayers(ctx):
         status = serverStatus()
+        titleOnline = 'Current number of players'
+        titleOffline = 'The server is offline!'
         if status == 'online':
             rs = getOnlinePlayers()
-            await ctx.channel.send(str(rs))
+            embed = createEmbed(titleOnline, str(rs))
+            await ctx.channel.send(embed=embed)
         else:
-            await ctx.channel.send('The server is offline!')
+            embed = createEmbed(titleOffline)
+            await ctx.channel.send(embed=embed)
     
     @bot.command()
     async def playerList(ctx):
         rs = getPlayerList()
-        
-        await ctx.channel.send('\n'.join(rs))
+        title = 'Player list'
+        descr = '\n'.join(rs)
+        embed = createEmbed(title, descr)
+        await ctx.channel.send(embed=embed)
+
+    @bot.command()
+    async def infoASC(ctx):
+        statusTitle = 'Server status'
+        status = serverStatus()
+        title = 'General info'
+        onlinePlayersTitle = 'Online Players'
+        onlineP = getOnlinePlayers()
+        playerListTitle = 'Player List'
+        playerList = getPlayerList()
+        playerListProcessed = '\n'.join(playerList)
+        embed = createEmbed(title, '', statusTitle, status, onlinePlayersTitle, onlineP, playerListTitle, playerListProcessed)
+        await ctx.channel.send(embed=embed)
 
     bot.run(TOKEN)
 
@@ -150,3 +187,21 @@ def getPlayerList():
             myServer = server
         
     return myServer.players_list
+
+#NOTE - other suff
+
+def createEmbed(title, description='', param1_name='', param1_value='', param2_name='', param2_value='', param3_name='', param3_value=''):
+    embed = discord.Embed(
+        title=title,
+        description=description,
+        type='rich'
+    )
+
+    if param1_name != '' and param1_value != '':
+        embed.add_field(name=param1_name, value=param1_value)
+        if param2_name != '' and param2_value != '':
+            embed.add_field(name=param2_name, value=param2_value)
+            if param3_name != '' and param3_value != '':
+                embed.add_field(name=param3_name, value=param3_value)
+
+    return embed
