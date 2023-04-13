@@ -30,7 +30,7 @@ Done by using https://pypi.org/project/python-aternos/
 ![GitHub repo size](https://img.shields.io/github/repo-size/Ho3pLi/AternosDiscordBot)
 ## Requirements
 
-- Python (python_aternos, discord. dotenv)
+- Python (python_aternos, discord, dotenv)
 - Aternos
 - Discord
 
