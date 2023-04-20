@@ -10,33 +10,48 @@ serverAddress = 'none'
 def runDiscordBot():
 
     load_dotenv()
-    TOKEN = os.getenv('DISCORD_TOKEN')
+    # TOKEN = os.getenv('DISCORD_TOKEN')
 
-    intents = discord.Intents.default()
-    intents.message_content = True
+    # intents = discord.Intents.default()
+    # intents.message_content = True
 
-    bot = commands.Bot(command_prefix= '/' , intents=intents)
+    # bot = commands.Bot(command_prefix= '/' , intents=intents)
 
-    @bot.command()
-    async def setSA(ctx, myServerAddress):
+    bot = discord.Bot()
+
+    @bot.event
+    async def on_ready():
+        print(f"{bot.user} is ready and online!")
+
+    @bot.command(description="Sends the bot's latency.")
+    async def ping(ctx):
+        title = 'Aternos Server Controller'
+        descr = ('Pong! Latency is '+str(bot.latency))
+        embed = createEmbed(title, descr)
+        await ctx.respond(embed=embed)
+
+    @bot.command(description='Sets the Aternos server address.')
+    async def set(ctx, my_server_address):
         global serverAddress
-        serverAddress = myServerAddress
+        serverAddress = my_server_address
         title = 'Server address set correctly!'
         embed = createEmbed(title)
-        await ctx.channel.send(embed=embed)
+        await ctx.respond(embed=embed)
 
-    @bot.command()
-    async def viewSA(ctx):
+    @bot.command(description='Shows current Aternos server address.')
+    async def view(ctx):
         title = 'The current server address is: '
         embed = createEmbed(title, serverAddress)
-        await ctx.channel.send(embed=embed)
+        await ctx.respond(embed=embed)
 
-    @bot.command()
-    async def helpASC(ctx):
-        await ctx.channel.send('List of helpful commands :)\n\n```/viewSA: check current Server Address\n\n/setSA: set your Server Address\n\n/statusASC: check your server current status\n\n/startASC: start your server\n\n/stopASC: shut down your server```')
+    @bot.command(description='Shows helpful commands list.')
+    async def help(ctx):
+        title = 'Commands list: '
+        embed = createEmbed(title)
+        await ctx.respond(embed=embed)
 
-    @bot.command()
-    async def startASC(ctx):
+    @bot.command(description='Starts your Aternos server.')
+    async def start(ctx):
         status = serverStatus()
         title = 'Server status: '
         starting = 'Server starting..'
@@ -44,23 +59,23 @@ def runDiscordBot():
         if status == 'offline':
             runServer()
             embed = createEmbed(title, starting)
-            await ctx.channel.send(embed=embed)
+            await ctx.respond(embed=embed)
         elif status == 'loading' or status == 'preparing':
             embed = createEmbed(title, starting)
-            await ctx.channel.send(embed=embed)
+            await ctx.respond(embed=embed)
         elif status == 'online':
             embed = createEmbed(title, online)
-            await ctx.channel.send(embed=embed)
+            await ctx.respond(embed=embed)
 
-    @bot.command()
-    async def statusASC(ctx):
+    @bot.command(description='Shows current Aternos server status.')
+    async def status(ctx):
         status = serverStatus()
         title = 'The server is:'
         embed = createEmbed(title, status)
-        await ctx.channel.send(embed=embed)
+        await ctx.respond(embed=embed)
 
-    @bot.command()
-    async def stopASC(ctx):
+    @bot.command(description='Stops your Aternos server.')
+    async def stop(ctx):
         status = serverStatus()
         title = 'Server status: '+status
         online = 'Server shutting down..'
@@ -69,37 +84,37 @@ def runDiscordBot():
         if status == 'online':
             stopServer()
             embed = createEmbed(title, online)
-            await ctx.channel.send(embed=embed)
+            await ctx.respond(embed=embed)
         elif status == 'loading' or status == 'preparing':
             embed = createEmbed(title, loading)
-            await ctx.channel.send(embed=embed)
+            await ctx.respond(embed=embed)
         elif status == 'offline':
             embed = createEmbed(title, offline)
-            await ctx.channel.send(embed=embed)
+            await ctx.respond(embed=embed)
 
-    @bot.command()
-    async def onlinePlayers(ctx):
+    @bot.command(description='Shows number of current online players.')
+    async def onlineplayers(ctx):
         status = serverStatus()
         titleOnline = 'Current number of players'
         titleOffline = 'The server is offline!'
         if status == 'online':
             rs = getOnlinePlayers()
             embed = createEmbed(titleOnline, str(rs))
-            await ctx.channel.send(embed=embed)
+            await ctx.respond(embed=embed)
         else:
             embed = createEmbed(titleOffline)
-            await ctx.channel.send(embed=embed)
+            await ctx.respond(embed=embed)
     
-    @bot.command()
-    async def playerList(ctx):
+    @bot.command(description='Shows a list of current online players.')
+    async def playerlist(ctx):
         rs = getPlayerList()
         title = 'Player list'
         descr = '\n'.join(rs)
         embed = createEmbed(title, descr)
-        await ctx.channel.send(embed=embed)
+        await ctx.respond(embed=embed)
 
-    @bot.command()
-    async def infoASC(ctx):
+    @bot.command(description='Provides general info of your Aternos server.')
+    async def info(ctx):
         statusTitle = 'Server status'
         status = serverStatus()
         title = 'General info'
@@ -109,9 +124,9 @@ def runDiscordBot():
         playerList = getPlayerList()
         playerListProcessed = '\n'.join(playerList)
         embed = createEmbed(title, '', statusTitle, status, onlinePlayersTitle, onlineP, playerListTitle, playerListProcessed)
-        await ctx.channel.send(embed=embed)
+        await ctx.respond(embed=embed)
 
-    bot.run(TOKEN)
+    bot.run(os.getenv('DISCORD_TOKEN'))
 
 #NOTE - Aternos section
 
