@@ -1,9 +1,0 @@
-FROM python:3
-
-WORKDIR /app
-
-COPY . .
-
-RUN python3 -m pip install -U py-cord dotenv python_aternos aiosqlite asyncio
-
-CMD python -u ./main.py
