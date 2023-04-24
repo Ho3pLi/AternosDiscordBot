@@ -5,7 +5,7 @@ Italian
 
 Questo bot per Discord permette di controllare il tuo server Aternos in maniera molto semplice ed intuitiva.
 
-Il bot è attualmente privato e in versione alpha, manutenzione attiva.
+Il bot è attualmente pubblico e in versione alpha, manutenzione attiva.
 
 Realizzato usando https://pypi.org/project/python-aternos/
 
@@ -13,7 +13,7 @@ English
 
 This bot for Discord allows you to control your Aternos server in a very simple and intuitive way.
 
-The bot is currently private and in alpha, active maintenance.
+The bot is currently public and in alpha, active maintenance.
 
 Done by using https://pypi.org/project/python-aternos/
 
